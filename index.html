@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/homepage.css">
+    <title>Ecstasy</title>
+</head>
+<body>
+    <header style="text-align: center;">
+        <h1>Ecstasy</h1><br>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="profile.html">Profile</a></li>
+                <li><a href="login.html">Logout</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li>
+                    <form id="search-form" action="/search" method="get">
+                        <input type="text" id="search-input" name="q" placeholder="Search...">
+                        <button type="submit">Search</button>
+                    </form>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section id="create-post">
+            <h2>Create a Post</h2>
+            <form id="post-form">
+                <textarea id="post-content" placeholder="What's on your mind?"></textarea>
+                <button type="submit">Post</button>
+            </form>
+        </section>
+        <section id="posts">
+            <!-- Posts will appear here -->
+        </section>
+    </main>
+    <script>
+        // Function to save posts to localStorage
+        function savePosts(posts) {
+            localStorage.setItem('posts', JSON.stringify(posts));
+        }
+
+        // Function to load posts from localStorage
+        function loadPosts() {
+            var posts = localStorage.getItem('posts');
+            return posts ? JSON.parse(posts) : [];
+        }
+
+        // Function to render posts
+        function renderPosts() {
+            var posts = loadPosts();
+            var postsSection = document.getElementById('posts');
+            postsSection.innerHTML = '';
+
+            posts.forEach(function(post, index) {
+                var postElement = document.createElement('div');
+                postElement.textContent = post.content;
+
+                // Add delete button
+                var deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Delete';
+                deleteButton.addEventListener('click', function() {
+                    deletePost(index);
+                });
+                postElement.appendChild(deleteButton);
+
+                postsSection.appendChild(postElement);
+            });
+        }
+
+        // Function to add a new post
+        function addPost(content) {
+            var posts = loadPosts();
+            posts.push({ content: content });
+            savePosts(posts);
+            renderPosts();
+        }
+
+        // Function to delete a post
+        function deletePost(index) {
+            var posts = loadPosts();
+            posts.splice(index, 1);
+            savePosts(posts);
+            renderPosts();
+        }
+
+        // Event listener for form submission
+        document.getElementById('post-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
+            var content = document.getElementById('post-content').value;
+            if (content.trim() !== '') { // Check if content is not empty
+                addPost(content);
+                document.getElementById('post-content').value = ''; // Clear the textarea after posting
+            }
+        });
+
+        // Initial render of posts when the page loads
+        renderPosts();
+    </script>
+    <h2 style="text-align: center; background-color: blueviolet;">Upload a picture and video</h2>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" name="profilePicture" id="profilePicture">
+        <button type="submit" onclick="uploadPicture()">Upload</button>
+    </form>
+    <div id="message"></div>
+    <script src="./js/script.js"></script>
+    <footer>
+        <p>&copy; 2024 Ecstasy website. All rights reserved.</p>
+    </footer>
+   
+    
+</body>
+</html>

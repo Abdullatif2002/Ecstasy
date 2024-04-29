@@ -1,0 +1,13 @@
+article span {
+    margin-left: 20px;
+}
+
+article span a {
+    color: red;
+}
+
+article span a:hover {
+    font-weight: bold;
+}
+
+
